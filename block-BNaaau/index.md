@@ -5,15 +5,54 @@ Q. Create a basic server using http's createServer
   - console request and response object
   - do a request using browser on `localhost:5000`
   - check out console for request and response object
+  ```
+  var http = require('http');
+
+function handleRequest(req, res) {
+  console.log(req, res);
+}
+
+var server = http.createServer(handleRequest);
+
+server.listen(5000, () => {
+  console.log('server is listen on 5000');
+});
+```
 
 Q. create a node server 
   - add listener on port 5100
   - respond with 'My first server in NodeJS' using response object
+  ```
+  var http = require('http');
+
+function handleRequest(req, res) {
+  res.end("My first server in NodeJS");
+}
+
+var server = http.createServer(handleRequest);
+
+server.listen(5100, () => {
+  console.log('server is listen on 5000');
+});
+```
 
 Q. write code to create a node server 
   - add listener on port 5555
   - console request headers
   - respond with content of user-agent from request headers.
+  ```
+  function handleRequest(req, res) {
+  console.log(req.headers);
+  res.end(req.headers['user-agent']);
+}
+
+var server = http.createServer(handleRequest);
+
+server.listen(5500, () => {
+  console.log('server is listen on 5500');
+});
+```
+
 
 Q. write code to create a node server 
   - add listener on port 5566
@@ -52,6 +91,25 @@ Q. create a server and handle 2 different requests
   - handle GET request on '/' route where return your name in plain text in response
   - handle GET request on '/about' route and return your name in h2 as HTML page.
   - add a error handler at last to handle request made on other than above routes with a status code of 404.
+  ```
+  var server2 = http.createServer(handleRequest2);
+
+function handleRequest2(req, res) {
+  if (req.url === '/') {
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('vivek kumar');
+  } else if (req.url === '/about') {
+    res.setHeader('COntent-Type', 'text/html');
+    res.end('<h2>vivek kumar</h2>');
+  } else {
+    res.writeHead(404, {'Content-Type': 'text/html'}); 
+    res.end(`<h2>Error 404: Page Not Found</h2>`);
+  }
+}
+
+server2.listen(2345);
+
+```
     
 Q. Handle 2 requests on same route with different method
     1. GET on '/users' route where return a simple HTML form with name and email field
@@ -65,3 +123,18 @@ Q. create a server and handle query params from the request on following url i.e
   - differentiate between `req.url` and `parsedUrl.pathname`
   - grab the email from query params
   - return json response with email from query params
+
+  ```
+  function handleRequest(req, res) {
+  var urlParser = url.parse(req.url, true);
+  console.log(urlParser.pathname, req.url);
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(urlParser.query));
+}
+
+var server = http.createServer(handleRequest);
+
+server.listen(5500, () => {
+  console.log('server is listen on 5500');
+});
+```
